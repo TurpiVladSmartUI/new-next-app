@@ -1,11 +1,11 @@
 import { gql } from "@apollo/client";
 
 export const WP_HOME_PAGE = gql`
-query Countries {
+query Title {
   pages {
     nodes {
       title
     }
-  }
+  } 
 }
 `;

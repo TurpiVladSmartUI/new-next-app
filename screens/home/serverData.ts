@@ -1,30 +1,35 @@
-import { getAxiosData } from "services/analytics/postViews";
+import { getAxiosData } from "services/analytics/axiosQuery";
 import { apolloClient } from "services/apolo/client";
-import { WP_HOME_PAGE } from "services/apolo/queries/queries";
+import { WP_HOME_PAGE } from "services/apolo/queries";
 
 
 
-export const homeStaticProps = async (allLangData = false) => {
+export const homeStaticProps = async () => {
 
 	let dataFromAxios: any = null;
 	let dataFromGraph: any = null;
+	let error = false;
+	let errorText:any = null;
 
 	try {
 		dataFromAxios = await getAxiosData();
-		console.log("getAxiosData", dataFromAxios);
+		// console.log("dataFromAxios", dataFromAxios);
 
-		//WP AXIOS Vercel  
 		dataFromGraph = await apolloClient.query({
 			query: WP_HOME_PAGE,
 		});
-		console.log("dataFromGraph", dataFromGraph.data.pages.nodes);		
+		// console.log("dataFromGraph", dataFromGraph.data.pages.nodes);		
 
 	} catch (e) {
-		console.log(e);
+		error = true
+		errorText = JSON.stringify(e);
 	}
 	return {
 		props: {
 			dataFromGraph: dataFromGraph.data.pages.nodes,
+			dataFromAxios,
+			error,
+			errorText
 		},
 	};
 };
